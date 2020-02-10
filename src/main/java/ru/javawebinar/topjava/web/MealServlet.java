@@ -1,49 +1,73 @@
 package ru.javawebinar.topjava.web;
 
-import org.slf4j.Logger;
+import ru.javawebinar.topjava.dao.MealToDao;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealTo;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static org.slf4j.LoggerFactory.getLogger;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MealServlet extends HttpServlet {
 
-    private static final Logger log = getLogger(MealServlet.class);
+    private MealToDao dao;
+    private static String LIST_MealTo = "/meals.jsp";
+    private static String INSERT_OR_EDIT = "/meal.jsp";
+    private volatile AtomicInteger counter = new AtomicInteger(7);
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        log.debug("redirect to meals");
-        request.setAttribute("meals", getMeals());
-        request.getRequestDispatcher("/meals.jsp").forward(request, response);
+    public MealServlet() {
+        dao = new MealToDao();
     }
 
-    public static List<MealTo> getMeals() {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        String dateTimeString = req.getParameter("dateTime");
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
+        int calories = Integer.parseInt(req.getParameter("calories"));
 
-        List<Meal> meals = Arrays.asList(
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 400),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
-        );
-        Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
-                .collect(Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories)));
-        return meals.stream()
-                .map(meal -> new MealTo(meal.getDateTime(), meal.getDescription(), meal.getCalories(), caloriesSumByDate.get(meal.getDate()) > 2000))
-                .collect(Collectors.toList());
+        Meal meal = new Meal(dateTime, req.getParameter("description"), calories);
+
+        String id = req.getParameter("id");
+        if (id != null && !id.isEmpty()) {
+            meal.setId(Integer.parseInt(id));
+            dao.updateMeal(meal);
+        } else dao.addMeal(meal);
+
+        RequestDispatcher view = req.getRequestDispatcher(LIST_MealTo);
+        req.setAttribute("meals", dao.getAllMealsTo());
+        view.forward(req, resp);
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        String forward = "";
+        String action = request.getParameter("action");
+        if (action == null || action.isEmpty()) {
+            forward = LIST_MealTo;
+            request.setAttribute("meals", dao.getAllMealsTo());
+        } else if (action.equalsIgnoreCase("edit")) {
+            forward = INSERT_OR_EDIT;
+            int id = Integer.parseInt(request.getParameter("id"));
+            Meal meal = dao.getMealById(id);
+            request.setAttribute("meal", meal);
+        } else if (action.equalsIgnoreCase("listMealsTo")) {
+            forward = LIST_MealTo;
+            request.setAttribute("meals", dao.getAllMealsTo());
+        } else if (action.equalsIgnoreCase("insert")) {
+            forward = INSERT_OR_EDIT;
+            request.setAttribute("meals", dao.getAllMealsTo());
+        } else if (action.equalsIgnoreCase("delete")) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            dao.deleteMealById(id);
+            response.sendRedirect("meals");
+            return;
+        }
+
+        RequestDispatcher view = request.getRequestDispatcher(forward);
+        view.forward(request, response);
     }
 }
