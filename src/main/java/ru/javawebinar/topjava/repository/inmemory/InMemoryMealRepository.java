@@ -35,7 +35,9 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public boolean delete(int id, int userId) {
-        if (get(id, userId) == null) return false;
+        if (get(id, userId) == null) {
+            return false;
+        }
         else {
             repository.remove(id);
             return true;
@@ -45,8 +47,7 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public Meal get(int id, int userId) {
         Meal currentMeal = repository.get(id);
-        if (currentMeal == null || currentMeal.getUserId() != userId) return null;
-        else return currentMeal;
+        return currentMeal == null || currentMeal.getUserId() != userId ? null : currentMeal;
     }
 
     @Override
@@ -58,19 +59,11 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public Collection<Meal> getAll(int userId, LocalDate startDate, LocalDate endDate,LocalTime startTime, LocalTime endTime) {
-        Collection<Meal> allMeals = getAll(userId);
-        if (startDate != null && endDate != null) {
-            allMeals  = allMeals.stream()
+    public Collection<Meal> getAll(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+       return getAll(userId).stream()
+                    .filter(meal -> DateTimeUtil.isBetweenInclusive(meal.getTime(), startTime, endTime))
                     .filter(meal -> DateTimeUtil.isBetweenInclusive(meal.getDate(), startDate, endDate))
                     .collect(Collectors.toList());
-        }
-        if (startTime != null && endTime != null){
-            allMeals  = allMeals.stream()
-                    .filter(meal -> DateTimeUtil.isBetweenInclusive(meal.getTime(),  startTime, endTime))
-                    .collect(Collectors.toList());
-        }
-        return allMeals;
     }
 }
 

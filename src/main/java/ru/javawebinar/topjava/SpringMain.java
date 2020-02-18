@@ -20,9 +20,9 @@ public class SpringMain {
             AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
             adminUserController.getAll().forEach(System.out::println);
            // adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ROLE_ADMIN));
-           // MealRestController mealRestController = appCtx.getBean(MealRestController.class);
-           // mealRestController.update( new Meal(2,LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак02", 501),1);
-           // mealRestController.getAll().forEach(System.out::println);
+           MealRestController mealRestController = appCtx.getBean(MealRestController.class);
+           //mealRestController.update( new Meal(2,LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак02", 501),1);
+           mealRestController.getAll().forEach(System.out::println);
         }
     }
 }

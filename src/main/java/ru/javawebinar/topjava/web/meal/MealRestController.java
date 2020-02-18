@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
@@ -28,6 +30,7 @@ public class MealRestController {
     public Meal create(Meal meal) {
         log.info("create {}", meal);
         checkNew(meal);
+        meal.setUserId(authUserId());
         return service.create(meal);
     }
 
@@ -41,14 +44,15 @@ public class MealRestController {
         return service.get(id, authUserId());
     }
 
-    public Collection<Meal> getAll() {
+    public Collection<MealTo> getAll() {
         log.info("getAll");
-        return service.getAll(authUserId());
+        return MealsUtil.getTos(service.getAll(authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 
-    public Collection<Meal> getAll(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+    public Collection<MealTo> getAll(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         log.info("getFiltered");
-        return service.getAll(authUserId(), startDate, endDate, startTime, endTime);
+        Collection<Meal> mealsFilteredByDate = service.getAll(authUserId(), startDate, endDate, LocalTime.MIN, LocalTime.MAX);
+        return MealsUtil.getFilteredTos(mealsFilteredByDate,MealsUtil.DEFAULT_CALORIES_PER_DAY,startTime,endTime);
     }
 
     public void update(Meal meal, int id) {

@@ -41,7 +41,9 @@ public class MealService {
     }
 
     public void update(Meal meal, int userId) {
-        if (meal.getUserId() != userId) throw new NotFoundException("it is forbidden to change someone else's meal");
+        if (meal.getUserId() != userId) {
+            throw new NotFoundException("it is forbidden to change someone else's meal");
+        }
         checkNotFoundWithId(repository.save(meal), meal.getId());
     }
 
