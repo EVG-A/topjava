@@ -2,13 +2,17 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
-import java.util.Collection;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Collection;
+
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 @Controller
@@ -27,24 +31,29 @@ public class MealRestController {
         return service.create(meal);
     }
 
-    public void delete(int id, int userId) {
+    public void delete(int id) {
         log.info("delete {}", id);
-        service.delete(id, userId);
+        service.delete(id, authUserId());
     }
 
-    public Meal get(int id, int userId) {
+    public Meal get(int id) {
         log.info("get {}", id);
-        return service.get(id, userId);
+        return service.get(id, authUserId());
     }
 
-    public Collection<Meal> getAll(int userId) {
+    public Collection<Meal> getAll() {
         log.info("getAll");
-        return service.getAll(userId);
+        return service.getAll(authUserId());
     }
 
-    public void update(Meal meal, int userId) {
-        log.info("update {}", meal);
+    public Collection<Meal> getAll(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        log.info("getFiltered");
+        return service.getAll(authUserId(), startDate, endDate, startTime, endTime);
+    }
 
-        service.update(meal, userId);
+    public void update(Meal meal, int id) {
+        log.info("update {}", meal);
+        assureIdConsistent(meal, id);
+        service.update(meal, authUserId());
     }
 }
