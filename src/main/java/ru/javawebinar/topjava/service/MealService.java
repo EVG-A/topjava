@@ -40,10 +40,11 @@ public class MealService {
         return repository.getAll(userId, startDate, endDate, startTime, endTime);
     }
 
-    public void update(Meal meal, int userId) {
-        if (meal.getUserId() != userId) {
-            throw new NotFoundException("it is forbidden to change someone else's meal");
+    public void update(Meal meal, int id, int userId) {
+        if (repository.get(id,userId) == null) {
+            throw new NotFoundException("Not found meal");
         }
+        meal.setUserId(userId);
         checkNotFoundWithId(repository.save(meal), meal.getId());
     }
 

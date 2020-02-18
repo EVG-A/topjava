@@ -8,14 +8,12 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
-import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
-import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collection;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 @Controller
 public class MealRestController {
@@ -57,7 +55,7 @@ public class MealRestController {
 
     public void update(Meal meal, int id) {
         log.info("update {}", meal);
-        assureIdConsistent(meal, id);
-        service.update(meal, authUserId());
+        //assureIdConsistent(meal, id);
+        service.update(meal, id, authUserId());
     }
 }
