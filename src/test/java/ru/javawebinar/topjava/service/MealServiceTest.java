@@ -1,8 +1,10 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.ClassRule;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,16 +38,11 @@ public class MealServiceTest {
     private MealRepository repository;
 
     @Rule
-    public TestName testName = new TestName();
-
-    @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Rule
-    public TestTimer testTimer = TestTimer.getInstance();
-
     @ClassRule
-    public static TestTimer classTestTimer = TestTimer.getInstance();
+    public static TestTimer testTimer = new TestTimer();
 
     @Test
     public void delete() throws Exception {

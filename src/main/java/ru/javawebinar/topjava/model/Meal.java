@@ -1,17 +1,20 @@
 package ru.javawebinar.topjava.model;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @NamedQueries({
-        @NamedQuery(name = Meal.GET, query = "select m from Meal m left join fetch m.user where m.id = :id and m.user.id = :userId"),
+        @NamedQuery(name = Meal.GET, query = "select m from Meal m where m.id = :id and m.user.id = :userId"),
         @NamedQuery(name = Meal.DELETE, query = "DELETE from Meal m where m.id = :id and m.user.id = :userId"),
-        @NamedQuery(name = Meal.ALL_SORTED, query = "select m from Meal m left join fetch m.user where m.user.id = :userId order by m.dateTime desc"),
-        @NamedQuery(name = Meal.ALL_FILTERED, query = "select m from Meal m left join fetch m.user where m.user.id = :userId and m.dateTime >= :startDate and m.dateTime < :endDate order by m.dateTime desc")
+        @NamedQuery(name = Meal.ALL_SORTED, query = "select m from Meal m where m.user.id = :userId order by m.dateTime desc"),
+        @NamedQuery(name = Meal.ALL_FILTERED, query = "select m from Meal m where m.user.id = :userId and m.dateTime >= :startDate and m.dateTime < :endDate order by m.dateTime desc")
 })
 @Entity
 @Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meals_unique_user_datetime_idx")})
@@ -28,10 +31,12 @@ public class Meal extends AbstractBaseEntity {
 
     @Column(name = "description", nullable = false)
     @NotBlank
+    @Size(min = 2, max = 120)
     private String description;
 
     @Column(name = "calories", nullable = false)
     @NotNull
+    @Range(min = 10, max = 5000)
     private int calories;
 
     @JoinColumn(name = "user_id", nullable = false)

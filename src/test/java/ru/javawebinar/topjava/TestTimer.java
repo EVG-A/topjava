@@ -3,27 +3,15 @@ package ru.javawebinar.topjava;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class TestTimer implements TestRule {
 
-    private static TestTimer testTimer;
-    private long startTime;
-    private String methodName;
-    private List<String> testTimerMessages = new ArrayList<>();
-
-    private TestTimer() {
-
-    }
-
-    public static TestTimer getInstance() {
-        if (testTimer == null) {
-            testTimer = new TestTimer();
-        }
-        return testTimer;
-    }
+    private static final Logger log = getLogger(TestTimer.class);
 
     @Override
     public Statement apply(Statement base, Description description) {
@@ -31,12 +19,12 @@ public class TestTimer implements TestRule {
             return new Statement() {
                 @Override
                 public void evaluate() throws Throwable {
-                    startTime = System.currentTimeMillis();
-                    methodName = description.getMethodName();
+                    BigDecimal startTime = new BigDecimal(before());
+                    String methodName = description.getMethodName();
                     try {
                         base.evaluate();
                     } finally {
-                        after();
+                        after(startTime, methodName);
                     }
                 }
             };
@@ -56,15 +44,31 @@ public class TestTimer implements TestRule {
         }
     }
 
-    void after() {
-        long totalTime = System.currentTimeMillis() - startTime;
-        String message = methodName + " test execution time " + totalTime + " ms";
-        testTimerMessages.add(message);
-        System.out.println(message);
+    long before() {
+        return System.nanoTime();
+    }
+
+    void after(BigDecimal startTime, String methodName) {
+        BigDecimal currentTime = new BigDecimal(System.nanoTime());
+        BigDecimal totalTime = currentTime.subtract(startTime).divide(new BigDecimal(1000000));
+
+        String message = String.format("%-25s%10d%4s", methodName, totalTime.intValue(), "ms");
+        log.info(message);
+        MealTestData.TEST_TIMER_MESSAGES.add(message);
+    }
+
+    void beforeClass() {
     }
 
     void afterClass() {
-        System.out.println("Final report:");
-        testTimerMessages.forEach(System.out::println);
+        StringBuilder text = new StringBuilder("Final report:");
+        text.append(System.lineSeparator());
+        String head = String.format("%-25s%10s%4s", "Method Name", "Total Time", "(ms)");
+        text.append(head);
+        text.append(System.lineSeparator());
+        text.append("---------------------------------------");
+        text.append(System.lineSeparator());
+        MealTestData.TEST_TIMER_MESSAGES.forEach(message -> text.append(message).append(System.lineSeparator()));
+        log.info(text.toString());
     }
 }
