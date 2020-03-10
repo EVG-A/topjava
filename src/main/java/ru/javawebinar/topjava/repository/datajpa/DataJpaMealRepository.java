@@ -3,6 +3,8 @@ package ru.javawebinar.topjava.repository.datajpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
@@ -13,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-@Profile("datajpa")
+@Profile(Profiles.DATAJPA)
 public class DataJpaMealRepository implements MealRepository {
 
     @Autowired
@@ -23,6 +25,7 @@ public class DataJpaMealRepository implements MealRepository {
     private EntityManager em;
 
     @Override
+    @Transactional
     public Meal save(Meal meal, int userId) {
         meal.setUser(em.getReference(User.class, userId));
         if (!meal.isNew() && get(meal.getId(), userId) == null) {
