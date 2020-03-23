@@ -15,7 +15,7 @@
 <section>
     <hr/>
     <h2><spring:message code="meal.title"/></h2>
-    <form method="get" action="/topjava/meals/filter">
+    <form method="get" action="${pageContext.request.contextPath}/meals/filter">
 <%--        <input type="hidden" name="action" value="filter">--%>
         <dl>
             <dt><spring:message code="meal.fromDate"/></dt>
@@ -36,7 +36,7 @@
         <button type="submit"><spring:message code="meal.filter"/></button>
     </form>
     <hr/>
-    <form action="/topjava/meals/get" method="get"><input type="submit" value="<spring:message code="meal.addMeal"/>"></form>
+    <form action="${pageContext.request.contextPath}/meals/get" method="get"><input type="submit" value="<spring:message code="meal.addMeal"/>"></form>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
@@ -59,8 +59,8 @@
                 </td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
-                <td><form action="/topjava/meals/get/${meal.id}" method="get"><input type="submit" value="<spring:message code="meal.update"/>"></form></td>
-                <td><form action="/topjava/meals/delete/${meal.id}" method="get"><input type="submit" value="<spring:message code="meal.delete"/>"></form></td>
+                <td><form action="${pageContext.request.contextPath}/meals/get/${meal.id}" method="get"><input type="submit" value="<spring:message code="meal.update"/>"></form></td>
+                <td><form action="/${pageContext.request.contextPath}/meals/delete/${meal.id}" method="get"><input type="submit" value="<spring:message code="meal.delete"/>"></form></td>
             </tr>
         </c:forEach>
     </table>
