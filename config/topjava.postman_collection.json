@@ -1,0 +1,206 @@
+{
+	"info": {
+		"_postman_id": "160518de-1ca0-4675-97cf-83a1fe60ed21",
+		"name": "topjava",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/topjava/rest/meals/100008",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"topjava",
+						"rest",
+						"meals",
+						"100008"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAll",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/topjava/rest/meals",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"topjava",
+						"rest",
+						"meals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json;charset=UTF-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{   \"dateTime\": \"2020-04-27T20:00:00\",\r\n   \"description\": \"newMeal\",\r\n   \"calories\": 510\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/topjava/rest/meals",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"topjava",
+						"rest",
+						"meals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json;charset=UTF-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n      \"dateTime\": \"2020-01-31T20:00:00\",\r\n      \"description\": \"updatedDesc\",\r\n      \"calories\": 1111\r\n   }"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/topjava/rest/meals/100008",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"topjava",
+						"rest",
+						"meals",
+						"100008"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/topjava/rest/meals/100007",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"topjava",
+						"rest",
+						"meals",
+						"100007"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/topjava/rest/meals/filter?endDate=2020-01-30&startTime=11:00:00.000-05:00&endTime=23:30:00.000-05:00&startDate=2020-01-30",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"topjava",
+						"rest",
+						"meals",
+						"filter"
+					],
+					"query": [
+						{
+							"key": "endDate",
+							"value": "2020-01-30"
+						},
+						{
+							"key": "startTime",
+							"value": "11:00:00.000-05:00"
+						},
+						{
+							"key": "endTime",
+							"value": "23:30:00.000-05:00"
+						},
+						{
+							"key": "startDate",
+							"value": "2020-01-30"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
