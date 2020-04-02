@@ -7,9 +7,39 @@
 	"item": [
 		{
 			"name": "GET",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2b276e44-f01e-4cc3-a83f-1643ccf860d7",
+						"exec": [
+							"pm.test(\"My Get test\", function(){",
+							"   pm.response.to.be.ok; ",
+							"   pm.response.to.be.withBody;",
+							"   pm.response.to.be.json;",
+							"   pm.response.to.have.jsonBody({",
+							"    \"id\": 100008,",
+							"    \"dateTime\": \"2020-01-31T20:00:00\",",
+							"    \"description\": \"updatedDesc\",",
+							"    \"calories\": 1111,",
+							"    \"user\": null",
+							"});",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://127.0.0.1:8080/topjava/rest/meals/100008",
 					"protocol": "http",
@@ -32,6 +62,22 @@
 		},
 		{
 			"name": "GetAll",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "720d9da4-978b-4db0-868b-21341c7b1682",
+						"exec": [
+							"pm.test(\"My GetAll test\", function(){",
+							"   pm.response.to.be.ok; ",
+							"   pm.response.to.be.withBody;",
+							"   pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -56,6 +102,27 @@
 		},
 		{
 			"name": "Create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "266a6c1e-9f44-4ed9-b070-5b457c14f5c4",
+						"exec": [
+							"pm.test(\"My Create test\", function(){",
+							"   pm.response.to.have.status(201); ",
+							"   pm.response.to.be.withBody;",
+							"   pm.response.to.be.json;",
+							"   pm.response.to.have.jsonBody({",
+							"    \"dateTime\": \"2020-04-22T20:00:00\",",
+							"    \"description\": \"newMeal\",",
+							"    \"calories\": 510,",
+							"});",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {
 					"content-type": true
@@ -72,7 +139,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{   \"dateTime\": \"2020-04-27T20:00:00\",\r\n   \"description\": \"newMeal\",\r\n   \"calories\": 510\r\n}"
+					"raw": "{   \"dateTime\": \"2020-04-22T20:00:00\",\r\n   \"description\": \"newMeal\",\r\n   \"calories\": 510\r\n}"
 				},
 				"url": {
 					"raw": "http://127.0.0.1:8080/topjava/rest/meals",
@@ -95,6 +162,20 @@
 		},
 		{
 			"name": "Update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bd69b54a-f24f-46d0-8458-2872f4bd4d56",
+						"exec": [
+							"pm.test(\"My Get test\", function(){",
+							"   pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {
 					"content-type": true
@@ -135,11 +216,25 @@
 		},
 		{
 			"name": "Delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "381ae3fe-65ad-47ce-ba95-fe87ba4dafbe",
+						"exec": [
+							"pm.test(\"My Delete test\", function(){",
+							"   pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8080/topjava/rest/meals/100007",
+					"raw": "http://127.0.0.1:8080/topjava/rest/meals/100004",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -152,7 +247,7 @@
 						"topjava",
 						"rest",
 						"meals",
-						"100007"
+						"100004"
 					]
 				}
 			},
@@ -160,6 +255,22 @@
 		},
 		{
 			"name": "Filter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c1c35fa4-50e1-496e-848a-0ebaa50f0a38",
+						"exec": [
+							"pm.test(\"My GetAll test\", function(){",
+							"   pm.response.to.be.ok; ",
+							"   pm.response.to.be.withBody;",
+							"   pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
