@@ -1,13 +1,10 @@
-var context, form;
+var context, form, filterUrl, filterForm;
 
 function makeEditable(ctx) {
     context = ctx;
     form = $('#detailsForm');
-    $(".delete").click(function () {
-        if (confirm('Are you sure?')) {
-            deleteRow($(this).attr("id"));
-        }
-    });
+    filterForm = $('#filter');
+    filterUrl = "";
 
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
@@ -23,17 +20,34 @@ function add() {
 }
 
 function deleteRow(id) {
-    $.ajax({
-        url: context.ajaxUrl + id,
-        type: "DELETE"
-    }).done(function () {
-        updateTable();
-        successNoty("Deleted");
-    });
+    if (confirm('Are you sure?')) {
+        $.ajax({
+            url: context.ajaxUrl + id,
+            type: "DELETE"
+        }).done(function () {
+            updateTable();
+            successNoty("Deleted");
+        });
+    }
+}
+
+function filterTable() {
+    var startDate = "startDate=" + filterForm.find("input[name=startDate]").val();
+    var startTime = "startTime=" + filterForm.find("input[name=startTime]").val();
+    var endDate = "endDate=" + filterForm.find("input[name=endDate]").val();
+    var endTime = "endTime=" + filterForm.find("input[name=endTime]").val();
+    filterUrl = "filter?" + startDate + "&" + startTime + "&" + endDate + "&" + endTime;
+    updateTable();
+}
+
+function clearFilter() {
+    filterUrl = "";
+    filterForm.find(":input").val("");
+    updateTable();
 }
 
 function updateTable() {
-    $.get(context.ajaxUrl, function (data) {
+    $.get(context.ajaxUrl + filterUrl, function (data) {
         context.datatableApi.clear().rows.add(data).draw();
     });
 }
